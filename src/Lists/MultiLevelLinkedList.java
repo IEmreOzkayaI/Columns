@@ -1,11 +1,12 @@
 package Lists;
+
 import Lists.Nodes.ColumnNode;
 import Lists.Nodes.NumNode;
 import enigma.core.Enigma;
 
 public class MultiLevelLinkedList {
 	public ColumnNode head;
-	enigma.console.Console eng =Enigma.getConsole("Columns Game", 40, 25, 30);
+	enigma.console.Console eng = Enigma.getConsole("Columns Game", 40, 25, 30);
 
 	public void addColumn(String columnName) {
 		if (head == null) {
@@ -42,10 +43,12 @@ public class MultiLevelLinkedList {
 			}
 		}
 	}
+
 	public ColumnNode getHead() {
 		return head;
-		
+
 	}
+
 	public int sizeColumns() {
 		int count = 0;
 		if (head == null)
@@ -60,14 +63,12 @@ public class MultiLevelLinkedList {
 		return count;
 	}
 
-	
-
-	public void display() { // vertical print 
+	public void display() { // vertical print
 		if (head == null)
 			System.out.println("linked list is empty");
 		else {
 			ColumnNode temp = head;
-			int x = 6;
+			int x = 6;	
 			int z = 6;
 			int k = 4;
 			while (temp != null) {
@@ -79,6 +80,7 @@ public class MultiLevelLinkedList {
 					System.out.print((int) temp2.getNumber());
 					temp2 = temp2.getNext();
 					k++;
+
 				}
 				temp = temp.getRight();
 				System.out.println();
@@ -87,19 +89,20 @@ public class MultiLevelLinkedList {
 				z += 5;
 			}
 		}
-	}	
-	
-	public void remove_transfer_element(ColumnNode col_node,NumNode num_node) {
-		while(col_node != this.head) {
-			this.head=this.head.getRight();
+	}
+
+	public void remove_transfer_element(ColumnNode col_node, NumNode num_node) {
+		ColumnNode temp_head = this.head;
+		while (col_node != temp_head) {
+			temp_head = temp_head.getRight();
 		}
-		NumNode n_node=this.head.getDown();
-		NumNode delete_after = null;
-		while(n_node != num_node) {
-			delete_after = n_node;
-			n_node =n_node.getNext();
+		NumNode n_node = temp_head.getDown();
+		NumNode before = temp_head.getDown();
+		while (n_node != num_node) {
+			before = n_node;
+			n_node = n_node.getNext();
 		}
-		n_node=null;
+		before.setNext(null);
 	}
 
 }
