@@ -42,7 +42,7 @@ public class ColumnsGame {
 
 	public static void initialize_game() {
 		double transferCount = 0;
-		double finishedOrderedSets = 0;  // transfer iþlemleri bittiðinde skor için kullanýlacak
+		double finishedOrderedSets = 0;  // transfer iï¿½lemleri bittiï¿½inde skor iï¿½in kullanï¿½lacak
 		double score = 0;  
 		boolean flag = false;
 		while (true) {
@@ -61,9 +61,23 @@ public class ColumnsGame {
 				box.hideBoxElement();
 				selected_element = 0;
 
+
 				white();
 				columns.display();
 
+			} else if (input.equalsIgnoreCase("Z")) {
+				if (!num_selected) {
+					num_selected = true;
+					from_num_node = num_holder;
+					columns.remove_transfer_element(col_holder, from_num_node);
+//					clearConsole();
+					col_holder = columns.getHead();
+					reset_the_game_coordinate();
+					white();
+					columns.display();
+					
+					
+				}
 			}
 
 			else if (input.equalsIgnoreCase("E")) {
@@ -123,6 +137,20 @@ public class ColumnsGame {
 	//	highScoreTable.addPlayerScore(100 * finishedOrderedSets + (score / transferCount));
 	//	highScoreTable.printScores();
 		
+	}
+	
+	public static void clearConsole() {
+		eng.getTextWindow().setCursorPosition(10, 2);
+		for (int i = 0; i < 7; i++) {
+			for (int j = 0; j < 29; j++) {
+				eng.getTextWindow().setCursorPosition(10+j, 2+i);
+
+				System.out.print(" ");
+			}
+			System.out.println(" ");
+		}
+
+
 	}
 
 	public static MultiLevelLinkedList locateFirstThirty() {

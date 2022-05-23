@@ -80,7 +80,8 @@ public class Box {
 			System.out.print(num.toString());
 
 		}
-		singleLinkedList.remove(num);
+		singleLinkedList.pop_front();
+
 		return (int)num;
 	}
 	
