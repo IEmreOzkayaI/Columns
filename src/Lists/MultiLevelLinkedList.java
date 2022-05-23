@@ -89,6 +89,7 @@ public class MultiLevelLinkedList {
 				z += 5;
 			}
 		}
+	}	
 	}
 
 	public void remove_transfer_element(ColumnNode col_node, NumNode num_node) {

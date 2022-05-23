@@ -17,17 +17,15 @@ public class ColumnsGame {
 	public static enigma.console.Console eng;
 	public static MultiLevelLinkedList columns = new MultiLevelLinkedList();
 	private static Box box;
-
+	private static HighScoreTable highScoreTable = new HighScoreTable();
 	static int x = 6;
 	static int num_x = 6;
 	static int num_y = 4;
 	static boolean columnSelected = false;
 
-	static int selected_box_element = 0;
-	static boolean num_selected = false;
+	static int selected_element = 0;
 	static NumNode num_holder = null;
 	static ColumnNode col_holder = null;
-	static NumNode from_num_node = null;
 
 	public ColumnsGame(Console eng) throws InterruptedException {
 		ColumnsGame.eng = eng;
@@ -35,44 +33,37 @@ public class ColumnsGame {
 		box.numberGenerator();
 		locateFirstThirty();
 		columns.display();
+		System.out.println("\n\n\n\n\n");
+	//	highScoreTable.addPlayerScore(520);       /* score table try */
+	//	highScoreTable.printScores();
 		col_holder = columns.getHead();
 		initialize_game();
 	}
 
 	public static void initialize_game() {
+		double transferCount = 0;
+		double finishedOrderedSets = 0;  // transfer i�lemleri bitti�inde skor i�in kullan�lacak
+		double score = 0;  
+		boolean flag = false;
 		while (true) {
 			red();
 			eng.getTextWindow().setCursorPosition(x, 2);
 			System.out.print("C" + col_holder.getColumnName());
 			String input = keyList().toString();
 
-			if (input.equalsIgnoreCase("B") && selected_box_element == 0) {
-				selected_box_element = (int) box.representBoxElement();
+			if (input.equalsIgnoreCase("B") && selected_element == 0) {
+				selected_element = (int) box.representBoxElement();
 
 			} else if (input.equalsIgnoreCase("X")) {
 
-				if (selected_box_element != 0) {
-					columns.addNumber(col_holder.getColumnName().toString(), selected_box_element);
-					reset_the_game_coordinate();
-					col_holder = columns.getHead();
-					box.hideBoxElement();
-					selected_box_element = 0;
+				columns.addNumber(col_holder.getColumnName().toString(), selected_element);
+				reset_the_game_coordinate();
+				box.hideBoxElement();
+				selected_element = 0;
 
-					white();
-					columns.display();
-				}
 
-				if (selected_box_element == 0 && num_selected) {
-					if (Math.abs((int) from_num_node.getNumber() - (int) col_holder.getLastNode()) == 1
-							|| (int) from_num_node.getNumber() - col_holder.getLastNode() == 0) {
-						while (from_num_node != null) {
-							columns.addNumber(col_holder.getColumnName().toString(), (int) from_num_node.getNumber());
-							from_num_node = from_num_node.getNext();
-						}
-					}
-					white();
-					columns.display();	
-				}
+				white();
+				columns.display();
 
 			} else if (input.equalsIgnoreCase("Z")) {
 				if (!num_selected) {
@@ -121,7 +112,6 @@ public class ColumnsGame {
 			else if (input.equalsIgnoreCase("Ex")) {
 
 				reset_the_game_coordinate();
-				col_holder = columns.getHead();
 				white();
 				columns.display();
 
@@ -143,6 +133,10 @@ public class ColumnsGame {
 			reset_keyList();
 
 		}
+		
+	//	highScoreTable.addPlayerScore(100 * finishedOrderedSets + (score / transferCount));
+	//	highScoreTable.printScores();
+		
 	}
 	
 	public static void clearConsole() {
@@ -159,27 +153,18 @@ public class ColumnsGame {
 
 	}
 
-	public static void locateFirstThirty() {
-
-		SingleNode temp = box.getSLL().getHead();
+	public static MultiLevelLinkedList locateFirstThirty() {
+		SingleNode col_holder = box.getSLL().getHead();
 		for (int i = 1; i < 6; i++) {
 			columns.addColumn(String.valueOf(i));
 			for (int j = 0; j < 6; j++) {
-
-				columns.addNumber(String.valueOf(i),(int) temp.getData());
-
-				temp = temp.getLink();
+				columns.addNumber(String.valueOf(i), (int) col_holder.getData());
+				col_holder = col_holder.getLink();
 
 			}
-		}
-		removeFirstThirtyFromBox();
 
-	}
-
-	public static void removeFirstThirtyFromBox() {
-		for (int i = 0; i < 30; i++) {
-			box.getSLL().pop_front();
 		}
+		return columns;
 	}
 
 	public static Object keyList() {
@@ -218,8 +203,6 @@ public class ColumnsGame {
 					return "B";
 				if (rkey == KeyEvent.VK_X)
 					return "X";
-				if (rkey == KeyEvent.VK_Z)
-					return "Z";
 				if (rkey == KeyEvent.VK_ENTER)
 					return "E";
 				if (rkey == KeyEvent.VK_ESCAPE)
@@ -242,6 +225,7 @@ public class ColumnsGame {
 		num_x = 6;
 		num_y = 4;
 		num_holder = null;
+		col_holder = columns.getHead();
 		columnSelected = false;
 
 	}
@@ -275,5 +259,6 @@ public class ColumnsGame {
 		TextAttributes write = new TextAttributes(Color.magenta);
 		eng.setTextAttributes(write);
 	}
+
 
 }

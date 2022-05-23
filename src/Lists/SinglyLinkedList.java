@@ -37,7 +37,7 @@ public class SinglyLinkedList {
 		return head;
 	}
 	
-	public void pop_front() {
+	void pop_front() {
 		  if(this.head != null) {
 		    
 		    //1. if head is not null, create a
