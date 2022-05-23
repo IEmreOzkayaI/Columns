@@ -1,5 +1,7 @@
 import java.util.Random;
 
+import Lists.SinglyLinkedList;
+import Lists.Nodes.SingleNode;
 import enigma.console.Console;
 
 public class Box {
@@ -36,8 +38,8 @@ public class Box {
 			random_2 = random.nextInt(51);
 		}
 
-		SinglyLinkedList.Node first_node = singleLinkedList.getHead();
-		SinglyLinkedList.Node second_node = singleLinkedList.getHead();
+		SingleNode first_node = singleLinkedList.getHead();
+		SingleNode second_node = singleLinkedList.getHead();
 
 		// select first node
 		for (int i = 1; i < random_1 - 1; i++) {
@@ -49,9 +51,9 @@ public class Box {
 			second_node = second_node.getLink();
 		}
 
-		SinglyLinkedList.Node tempNode = singleLinkedList.setNode(first_node.getLink().getData(),
+		SingleNode tempNode = singleLinkedList.setNode(first_node.getLink().getData(),
 				second_node.getLink().getLink());
-		SinglyLinkedList.Node tempNode2 = singleLinkedList.setNode(second_node.getLink().getData(),
+		SingleNode tempNode2 = singleLinkedList.setNode(second_node.getLink().getData(),
 				first_node.getLink().getLink());
 		first_node.setLink(tempNode2);
 		second_node.setLink(tempNode);
@@ -69,7 +71,7 @@ public class Box {
 
 	}
 
-	public void representBoxElement() {
+	public int representBoxElement() {
 		eng.getTextWindow().setCursorPosition(31, 12);
 		Object num = singleLinkedList.getHead().getData();
 		if ((int) num < 10)
@@ -78,15 +80,13 @@ public class Box {
 			System.out.print(num.toString());
 
 		}
-
 		singleLinkedList.remove(num);
+		return (int)num;
 	}
 	
 	public void hideBoxElement() {
 		eng.getTextWindow().setCursorPosition(31, 12);
 		System.out.print("  ");
-
-
 	}
 
 	public SinglyLinkedList getSLL() {

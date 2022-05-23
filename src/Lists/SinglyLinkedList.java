@@ -1,51 +1,67 @@
+package Lists;
+
+import Lists.Nodes.SingleNode;
 
 public class SinglyLinkedList {
-	private Node head;
+	private SingleNode head;
 
-	public class Node {
+	
 
-		Object data;
-		Node link;
-
-		public Node(Object data) {
-			this.data = data;
-			link = null;
-		}
-
-		public Object getData() {
-			return data;
-		}
-
-		public Node getLink() {
-			return link;
-		}
-
-		public void setLink(Node link) {
-			this.link = link;
-		}
-
+	static SingleNode removeFirstNode(SingleNode head)
+    {
+        if (head == null)
+            return null;
+ 
+        // Move the head pointer to the next node
+        SingleNode temp = head;
+        head = head.getLink();
+ 
+        return head;
+    }
+	
+	public SingleNode setHead(Object data, SingleNode link) {
+		
+		SingleNode head = new SingleNode(data);
+		head.setLink(head);
+		return head;
+		
 	}
-
-	public Node setNode(Object data, Node link) {
-		Node node = new Node(data);
+	
+	public SingleNode setNode(Object data, SingleNode link) {
+		SingleNode node = new SingleNode(data);
 		node.setLink(link);
 		return node;
 	}
 
-	public Node getHead() {
+	public SingleNode getHead() {
 		return head;
 	}
+	
+	void pop_front() {
+		  if(this.head != null) {
+		    
+		    //1. if head is not null, create a
+		    //   temp node pointing to head
+			  SingleNode temp = this.head;
+		    
+		    //2. move head to next of head
+		    this.head = this.head.getLink();
+		    
+		    //3. delete temp node
+		    temp = null;  
+		  }
+		}
 
 	public void Add(Object data) {
 		if (head == null) {
-			Node newNode = new Node(data);
+			SingleNode newNode = new SingleNode(data);
 			head = newNode;
 		} else {
-			Node temp = head;
+			SingleNode temp = head;
 			while (temp.getLink() != null) {
 				temp = temp.getLink();
 			}
-			Node newNode = new Node(data);
+			SingleNode newNode = new SingleNode(data);
 			temp.setLink(newNode);
 		}
 	}
@@ -56,7 +72,7 @@ public class SinglyLinkedList {
 		else {
 			int count = 0;
 
-			Node temp = head;
+			SingleNode temp = head;
 
 			while (temp != null) {
 				temp = temp.getLink();
@@ -71,12 +87,13 @@ public class SinglyLinkedList {
 		if (head == null)
 			System.out.println("List is Empty!");
 		else {
-			Node temp = head;
+			SingleNode temp = head;
 
 			while (temp != null) {
 				System.out.print(temp.getData() + " ");
 				temp = temp.getLink();
 			}
+			System.out.println();
 		}
 	}
 
@@ -87,8 +104,8 @@ public class SinglyLinkedList {
 			while ((Integer) head.getData() == (Integer) dataToDelete)
 				head = head.getLink();
 
-			Node temp = head;
-			Node previous = null;
+			SingleNode temp = head;
+			SingleNode previous = null;
 			while (temp != null) {
 				if ((Integer) temp.getData() == (Integer) dataToDelete) {
 					previous.setLink(temp.getLink());
@@ -106,7 +123,7 @@ public class SinglyLinkedList {
 			return Integer.MIN_VALUE;
 		} else {
 			int maxVal = Integer.MIN_VALUE;
-			Node temp = head;
+			SingleNode temp = head;
 
 			while (temp != null) {
 				if ((int) temp.getData() > maxVal) {
@@ -123,7 +140,7 @@ public class SinglyLinkedList {
 			System.out.println("List is empty");
 			return false;
 		} else {
-			Node temp = head;
+			SingleNode temp = head;
 			while (temp != null) {
 				if ((Integer) temp.getData() == (Integer) data)
 					return true;
@@ -145,7 +162,7 @@ public class SinglyLinkedList {
 				System.out.println("The element count should be even");
 				return false;
 			} else {
-				Node temp = head;
+				SingleNode temp = head;
 				for (int i = 0; i < count; i++) {
 					if (i > count / 2)
 						firstHalf += Integer.parseInt(temp.getData().toString());
