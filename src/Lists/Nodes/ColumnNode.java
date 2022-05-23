@@ -36,13 +36,4 @@ public class ColumnNode {
 		this.down = down;
 	}
 
-	public int getLastNode() {
-		NumNode num_node_value = this.getDown();
-		int value=0;
-		while(num_node_value !=null) {
-			value = (int)num_node_value.getNumber();
-			num_node_value = num_node_value.getNext();
-		}
-		return value;
-	}
 }

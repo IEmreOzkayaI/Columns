@@ -88,18 +88,5 @@ public class MultiLevelLinkedList {
 			}
 		}
 	}	
-	
-	public void remove_transfer_element(ColumnNode col_node,NumNode num_node) {
-		while(col_node != this.head) {
-			this.head=this.head.getRight();
-		}
-		NumNode n_node=this.head.getDown();
-		NumNode delete_after = null;
-		while(n_node != num_node) {
-			delete_after = n_node;
-			n_node =n_node.getNext();
-		}
-		n_node=null;
-	}
 
 }
