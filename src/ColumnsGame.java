@@ -36,21 +36,38 @@ public class ColumnsGame {
 		box.numberGenerator();
 		locateFirstThirty();
 		columns.display();
+		System.out.println("\n\n\n\n\n");
+	//	highScoreTable.addPlayerScore(520);       /* score table try */
+	//	highScoreTable.printScores();
 		col_holder = columns.getHead();
 		initialize_game();
 	}
 
 	public static void initialize_game() {
+		double transferCount = 0;
+		double finishedOrderedSets = 0;  // transfer i�lemleri bitti�inde skor i�in kullan�lacak
+		double score = 0;  
+		boolean flag = false;
 		while (true) {
 			red();
 			eng.getTextWindow().setCursorPosition(x, 2);
 			System.out.print("C" + col_holder.getColumnName());
 			String input = keyList().toString();
 
-			if (input.equalsIgnoreCase("B") && selected_box_element == 0 && from_num_node == null) {
+if (input.equalsIgnoreCase("B") && selected_box_element == 0 && from_num_node == null) {
 				selected_box_element = (int) box.representBoxElement();
 
+
 			} else if (input.equalsIgnoreCase("X")) {
+				
+				if (num_selected) {
+					int counter = 1;
+					NumNode temp = from_num_node;
+					while (temp != null) {
+						temp = temp.getNext();
+						counter++;
+
+	} else if (input.equalsIgnoreCase("X")) {
 				
 				if (num_selected) {
 					int counter = 1;
@@ -147,7 +164,6 @@ public class ColumnsGame {
 			else if (input.equalsIgnoreCase("Ex")) {
 
 				reset_the_game_coordinate();
-				col_holder = columns.getHead();
 				white();
 				columns.display();
 
@@ -169,6 +185,10 @@ public class ColumnsGame {
 			reset_keyList();
 
 		}
+		
+	//	highScoreTable.addPlayerScore(100 * finishedOrderedSets + (score / transferCount));
+	//	highScoreTable.printScores();
+		
 	}
 
 	public static void clearConsole() {
@@ -183,7 +203,6 @@ public class ColumnsGame {
 		}
 
 	}
-
 	public static void locateFirstThirty() {
 
 		SingleNode temp = box.getSLL().getHead();
@@ -199,12 +218,6 @@ public class ColumnsGame {
 		}
 		removeFirstThirtyFromBox();
 
-	}
-
-	public static void removeFirstThirtyFromBox() {
-		for (int i = 0; i < 30; i++) {
-			box.getSLL().pop_front();
-		}
 	}
 
 	public static Object keyList() {
@@ -243,8 +256,6 @@ public class ColumnsGame {
 					return "B";
 				if (rkey == KeyEvent.VK_X)
 					return "X";
-				if (rkey == KeyEvent.VK_Z)
-					return "Z";
 				if (rkey == KeyEvent.VK_ENTER)
 					return "E";
 				if (rkey == KeyEvent.VK_ESCAPE)
@@ -267,6 +278,7 @@ public class ColumnsGame {
 		num_x = 6;
 		num_y = 4;
 		num_holder = null;
+		col_holder = columns.getHead();
 		columnSelected = false;
 
 	}
@@ -300,5 +312,6 @@ public class ColumnsGame {
 		TextAttributes write = new TextAttributes(Color.magenta);
 		eng.setTextAttributes(write);
 	}
+
 
 }
