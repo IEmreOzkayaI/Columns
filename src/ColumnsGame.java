@@ -23,9 +23,11 @@ public class ColumnsGame {
 	static int num_y = 4;
 	static boolean columnSelected = false;
 
-	static int selected_element = 0;
+	static int selected_box_element = 0;
+	static boolean num_selected = false;
 	static NumNode num_holder = null;
 	static ColumnNode col_holder = null;
+	static NumNode from_num_node = null;
 
 	public ColumnsGame(Console eng) throws InterruptedException {
 		ColumnsGame.eng = eng;
@@ -44,19 +46,46 @@ public class ColumnsGame {
 			System.out.print("C" + col_holder.getColumnName());
 			String input = keyList().toString();
 
-			if (input.equalsIgnoreCase("B") && selected_element == 0) {
-				selected_element = (int) box.representBoxElement();
+			if (input.equalsIgnoreCase("B") && selected_box_element == 0) {
+				selected_box_element = (int) box.representBoxElement();
 
 			} else if (input.equalsIgnoreCase("X")) {
 
-				columns.addNumber(col_holder.getColumnName().toString(), selected_element);
-				reset_the_game_coordinate();
-				box.hideBoxElement();
-				selected_element = 0;
+				if (selected_box_element != 0) {
+					columns.addNumber(col_holder.getColumnName().toString(), selected_box_element);
+					reset_the_game_coordinate();
+					col_holder = columns.getHead();
+					box.hideBoxElement();
+					selected_box_element = 0;
 
-				white();
-				columns.display();
+					white();
+					columns.display();
+				}
 
+				if (selected_box_element == 0 && num_selected) {
+					if (Math.abs((int) from_num_node.getNumber() - (int) col_holder.getLastNode()) == 1
+							|| (int) from_num_node.getNumber() - col_holder.getLastNode() == 0) {
+						while (from_num_node != null) {
+							columns.addNumber(col_holder.getColumnName().toString(), (int) from_num_node.getNumber());
+							from_num_node = from_num_node.getNext();
+						}
+					}
+					white();
+					columns.display();	
+				}
+
+			} else if (input.equalsIgnoreCase("Z")) {
+				if (!num_selected) {
+					num_selected = true;
+					from_num_node = num_holder;
+					columns.remove_transfer_element(col_holder, from_num_node);
+					reset_the_game_coordinate();
+
+					white();
+					columns.display();
+					
+					
+				}
 			}
 
 			else if (input.equalsIgnoreCase("E")) {
@@ -91,6 +120,7 @@ public class ColumnsGame {
 			else if (input.equalsIgnoreCase("Ex")) {
 
 				reset_the_game_coordinate();
+				col_holder = columns.getHead();
 				white();
 				columns.display();
 
@@ -114,18 +144,27 @@ public class ColumnsGame {
 		}
 	}
 
-	public static MultiLevelLinkedList locateFirstThirty() {
-		SingleNode col_holder = box.getSLL().getHead();
+	public static void locateFirstThirty() {
+
+		SingleNode temp = box.getSLL().getHead();
 		for (int i = 1; i < 6; i++) {
 			columns.addColumn(String.valueOf(i));
 			for (int j = 0; j < 6; j++) {
-				columns.addNumber(String.valueOf(i), (int) col_holder.getData());
-				col_holder = col_holder.getLink();
+
+				columns.addNumber(String.valueOf(i),(int) temp.getData());
+
+				temp = temp.getLink();
 
 			}
-
 		}
-		return columns;
+		removeFirstThirtyFromBox();
+
+	}
+
+	public static void removeFirstThirtyFromBox() {
+		for (int i = 0; i < 30; i++) {
+			box.getSLL().pop_front();
+		}
 	}
 
 	public static Object keyList() {
@@ -164,6 +203,8 @@ public class ColumnsGame {
 					return "B";
 				if (rkey == KeyEvent.VK_X)
 					return "X";
+				if (rkey == KeyEvent.VK_Z)
+					return "Z";
 				if (rkey == KeyEvent.VK_ENTER)
 					return "E";
 				if (rkey == KeyEvent.VK_ESCAPE)
@@ -186,7 +227,6 @@ public class ColumnsGame {
 		num_x = 6;
 		num_y = 4;
 		num_holder = null;
-		col_holder = columns.getHead();
 		columnSelected = false;
 
 	}
