@@ -7,6 +7,7 @@ import enigma.core.Enigma;
 public class MultiLevelLinkedList {
 	public ColumnNode head;
 	enigma.console.Console eng = Enigma.getConsole("Columns Game", 40, 25, 30);
+	static int size_fixed = 0;
 
 	public void addColumn(String columnName) {
 		if (head == null) {
@@ -25,22 +26,23 @@ public class MultiLevelLinkedList {
 		if (head == null)
 			System.out.println("HEAD IS NULL");
 		else {
-			ColumnNode temp = head;
-			while (temp != null) {
-				if (column.equals(temp.getColumnName())) {
-					NumNode temp2 = temp.getDown();
-					if (temp2 == null) {
-						NumNode newNode = new NumNode(number);
-						temp.setDown(newNode);
-					} else {
-						while (temp2.getNext() != null)
-							temp2 = temp2.getNext();
-						NumNode newnode = new NumNode(number);
-						temp2.setNext(newnode);
+				ColumnNode temp = head;
+				while (temp != null) {
+					if (column.equals(temp.getColumnName())) {
+						NumNode temp2 = temp.getDown();
+						if (temp2 == null) {
+							NumNode newNode = new NumNode(number);
+							temp.setDown(newNode);
+						} else {
+							while (temp2.getNext() != null)
+								temp2 = temp2.getNext();
+							NumNode newnode = new NumNode(number);
+							temp2.setNext(newnode);
+						}
 					}
-				}
-				temp = temp.getRight();
+					temp = temp.getRight();
 			}
+
 		}
 	}
 
@@ -49,15 +51,20 @@ public class MultiLevelLinkedList {
 
 	}
 
-	public int sizeColumns() {
-		int count = 0;
+	public int sizeColumns(String column) {
+		int count = 1;
 		if (head == null)
 			System.out.println("linked list is empty");
 		else {
 			ColumnNode temp = head;
-			while (temp != null) {
-				count++;
+			while (temp.getColumnName().toString() != column) {
 				temp = temp.getRight();
+			}
+			NumNode temp_node = temp.getDown();
+
+			while (temp_node != null) {
+				temp_node = temp_node.getNext();
+				count++;
 			}
 		}
 		return count;
@@ -68,7 +75,7 @@ public class MultiLevelLinkedList {
 			System.out.println("linked list is empty");
 		else {
 			ColumnNode temp = head;
-			int x = 6;	
+			int x = 6;
 			int z = 6;
 			int k = 4;
 			while (temp != null) {
@@ -98,11 +105,16 @@ public class MultiLevelLinkedList {
 		}
 		NumNode n_node = temp_head.getDown();
 		NumNode before = temp_head.getDown();
-		while (n_node != num_node) {
-			before = n_node;
-			n_node = n_node.getNext();
+		if (num_node == before)
+			temp_head.setDown(null);
+		else {
+			while (n_node != num_node) {
+				before = n_node;
+				n_node = n_node.getNext();
+			}
+			before.setNext(null);
 		}
-		before.setNext(null);
+
 	}
 
 }
