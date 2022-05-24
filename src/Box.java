@@ -8,6 +8,7 @@ public class Box {
 
 	private SinglyLinkedList singleLinkedList;
 	public static enigma.console.Console eng;
+	Random random = new Random();
 
 	public Box(Console eng) {
 		Box.eng = eng;
@@ -31,12 +32,14 @@ public class Box {
 
 	public void shuffle() {
 
-		Random random = new Random();
 		int random_1 = random.nextInt(51);
 		int random_2 = random.nextInt(51);
-		while (random_1 == random_2) {
+		
+		while (!(random_2 - random_1 > 2)) {
 			random_2 = random.nextInt(51);
+			random_1 = random.nextInt(51);
 		}
+
 
 		SingleNode first_node = singleLinkedList.getHead();
 		SingleNode second_node = singleLinkedList.getHead();
