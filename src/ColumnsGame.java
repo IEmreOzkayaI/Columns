@@ -22,7 +22,7 @@ public class ColumnsGame {
 	static int num_x = 6;
 	static int num_y = 4;
 	static boolean columnSelected = false;
-	
+
 	static int selected_box_element = 0;
 	static boolean num_selected = false;
 	static NumNode num_holder = null;
@@ -34,54 +34,105 @@ public class ColumnsGame {
 	static int finishedSets;
 //	static int endGameScore = 100 * finishedSets + (score / transferCount);
 	static boolean isTransfered = false;
-	
+
 	public ColumnsGame(Console eng) throws InterruptedException {
 		ColumnsGame.eng = eng;
 		box = new Box(eng);
 		box.numberGenerator();
 		locateFirstThirty();
 		columns.display();
-		
-		
+
 		col_holder = columns.getHead();
 		initialize_game();
 	}
 
 	public static void initialize_game() {
 		while (true) {
+			white();
+
+			eng.getTextWindow().setCursorPosition(30, 4);
+			System.out.println("Transfer Count: " + transferCount);
+			eng.getTextWindow().setCursorPosition(30, 6);
+			System.out.println("Score: " + score);
 			isTransfered = false;
-			
+
 			red();
 			eng.getTextWindow().setCursorPosition(x, 2);
 			System.out.print("C" + col_holder.getColumnName());
 			String input = keyList().toString();
-			
+
 			if (input.equalsIgnoreCase("B") && selected_box_element == 0 && from_num_node == null) {
 				selected_box_element = (int) box.representBoxElement();
 
 			} else if (input.equalsIgnoreCase("X")) {
-				
-				if (num_selected) {
+				// null column part
+				if (col_holder.getDown() == null) {
+					
+					if (num_selected) {
+						num_selected=false;
+						while (from_num_node != null) {
+							columns.addNumber(col_holder.getColumnName().toString(), (int) from_num_node.getNumber());
+							from_num_node = from_num_node.getNext();
+						}
+						if(columns.sizeColumns(col_holder.getColumnName().toString()) == 11) {
+							score += find_sequential(col_holder);
+						}
+						if(columns.sizeColumns(from_col_node.getColumnName().toString()) == 11) {
+							score += find_sequential(from_col_node);
+						}
+					}
+					else if (selected_box_element != 0) {
+						columns.addNumber(col_holder.getColumnName().toString(), selected_box_element);
+						reset_the_game_coordinate();
+						col_holder = columns.getHead();
+						box.hideBoxElement();
+						selected_box_element = 0;
+						if(columns.sizeColumns(col_holder.getColumnName().toString()) == 10) {
+							score += find_sequential(col_holder);
+						}
+						if(columns.sizeColumns(from_col_node.getColumnName().toString()) == 10) {
+							score += find_sequential(col_holder);
+						}
+					}
+					transferCount++;
+					isTransfered = true;
+					col_holder = columns.getHead();
+					reset_the_game_coordinate();
+					white();
+					columns.display();
+				} 
+				// column transfer part
+				else if (num_selected) {
 					int counter = 1;
 					NumNode temp = from_num_node;
 					while (temp != null) {
 						temp = temp.getNext();
 						counter++;
-
 					}
+					// trnasfered
 					if ((Math.abs((int) from_num_node.getNumber() - (int) col_holder.getLastNode()) == 1
 							|| (int) from_num_node.getNumber() - col_holder.getLastNode() == 0)
 							&& !(columns.sizeColumns(col_holder.getColumnName().toString()) + counter > 22)) {
 
 						while (from_num_node != null) {
-							isTransfered = true;
 							columns.addNumber(col_holder.getColumnName().toString(), (int) from_num_node.getNumber());
-							from_num_node = from_num_node.getNext();						
+							from_num_node = from_num_node.getNext();
 						}
-						
-					} else {
+						if(columns.sizeColumns(col_holder.getColumnName().toString()) == 11) {
+							score += find_sequential(col_holder);
+						}
+						if(columns.sizeColumns(from_col_node.getColumnName().toString()) == 11) {
+							score += find_sequential(from_col_node);
+						}
+
+						transferCount++;
+						isTransfered = true;
+
+					} 
+					// dont transferred
+					else {
 						while (from_num_node != null) {
-							
+
 							columns.addNumber(from_col_node.getColumnName().toString(),
 									(int) from_num_node.getNumber());
 							from_num_node = from_num_node.getNext();
@@ -94,29 +145,31 @@ public class ColumnsGame {
 					white();
 					columns.display();
 				}
-				else if(col_holder.getDown() == null) {
-					while (from_num_node != null) {
-						columns.addNumber(from_col_node.getColumnName().toString(),
-								(int) from_num_node.getNumber());
-						from_num_node = from_num_node.getNext();
-					}
-				}
+				
+				// box transfer
 				else if (selected_box_element != 0 && columns.sizeColumns(col_holder.getColumnName().toString()) < 21) {
+					// succes
 					if ((Math.abs((int) selected_box_element - (int) col_holder.getLastNode()) == 1
 							|| (int) selected_box_element - col_holder.getLastNode() == 0)) {
 						columns.addNumber(col_holder.getColumnName().toString(), selected_box_element);
 						reset_the_game_coordinate();
+						if(columns.sizeColumns(col_holder.getColumnName().toString()) == 11) {
+							score += find_sequential(col_holder);
+						}
+						if(columns.sizeColumns(from_col_node.getColumnName().toString()) == 11) {
+							score += find_sequential(from_col_node);
+						}
 						col_holder = columns.getHead();
 						box.hideBoxElement();
 						selected_box_element = 0;
+						transferCount++;
+						isTransfered = true;
 
 						white();
 						columns.display();
 					}
 				}
-
-
-
+				
 			} else if (input.equalsIgnoreCase("Z")) {
 				if (!num_selected && columnSelected) {
 					num_selected = true;
@@ -133,7 +186,7 @@ public class ColumnsGame {
 			}
 
 			else if (input.equalsIgnoreCase("E")) {
-				if (!columnSelected) {
+				if (!columnSelected && col_holder.getDown() != null) {
 					num_holder = col_holder.getDown();
 					if (num_holder != null) {
 						yellow();
@@ -182,11 +235,7 @@ public class ColumnsGame {
 				}
 
 			}
-			yellow();
-			eng.getTextWindow().setCursorPosition(30, 4);
-			if(isTransfered)
-				transferCount++;
-			System.out.println("Transfer Count: " + transferCount);
+
 			reset_keyList();
 
 		}
@@ -290,6 +339,70 @@ public class ColumnsGame {
 		num_holder = null;
 		columnSelected = false;
 
+	}
+
+	public static int find_sequential(ColumnNode current_column) {
+		NumNode current_num = current_column.getDown();
+		int value = 0;
+		int column_Size = columns.sizeColumns(current_column.getColumnName().toString());
+		for (int i = 1; i <= column_Size; i++) {
+
+			if (current_num != null) {
+				if (current_num.getNumber().toString().equals("1") && column_Size - i >= 9)
+					value = one_to_ten(current_column, current_num, i);
+				if (current_num.getNumber().toString().equals("10") && column_Size - i >= 9)
+					value = ten_to_one(current_column, current_num, i);
+				if (value == 1000) {
+					columns.remove_transfer_element(current_column, current_num);
+					clearConsole();
+					break;
+				}
+				current_num = current_num.getNext();
+			}
+		
+
+		}
+
+		return value;
+	}
+
+	public static int one_to_ten(ColumnNode current_column, NumNode current_num, int location) {
+		int counter = 1;
+		int size = columns.sizeColumns(current_column.getColumnName().toString());
+		for (int i = location; i <= size; i++) {
+			if (current_num.getNext() != null) {
+
+				if (counter + 1 == (int) current_num.getNext().getNumber()) {
+					counter++;
+					current_num = current_num.getNext();
+				}
+			}
+		}
+		if (counter == 10)
+			return 1000;
+		else
+			return 0;
+
+	}
+
+	public static int ten_to_one(ColumnNode current_column, NumNode current_num, int location) {
+		int counter = 10;
+		int size = columns.sizeColumns(current_column.getColumnName().toString());
+
+		for (int i = location; i <= size; i++) {
+			if (current_num.getNext() != null) {
+
+				if (counter - 1 == (int) current_num.getNext().getNumber()) {
+					counter--;
+					current_num = current_num.getNext();
+
+				}
+			}
+		}
+		if (counter == 1)
+			return 1000;
+		else
+			return 0;
 	}
 
 	public static void blue() {

@@ -67,6 +67,7 @@ public class MultiLevelLinkedList {
 				count++;
 			}
 		}
+
 		return count;
 	}
 
