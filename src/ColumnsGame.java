@@ -17,36 +17,44 @@ public class ColumnsGame {
 	public static enigma.console.Console eng;
 	public static MultiLevelLinkedList columns = new MultiLevelLinkedList();
 	private static Box box;
-
+	private static HighScoreTable highScoreTable = new HighScoreTable();
 	static int x = 6;
 	static int num_x = 6;
 	static int num_y = 4;
 	static boolean columnSelected = false;
-
+	
 	static int selected_box_element = 0;
 	static boolean num_selected = false;
 	static NumNode num_holder = null;
 	static ColumnNode col_holder = null;
 	static NumNode from_num_node = null;
 	static ColumnNode from_col_node = null;
-
+	static int transferCount = 0;
+	static int score;
+	static int finishedSets;
+//	static int endGameScore = 100 * finishedSets + (score / transferCount);
+	static boolean isTransfered = false;
 	public ColumnsGame(Console eng) throws InterruptedException {
 		ColumnsGame.eng = eng;
 		box = new Box(eng);
 		box.numberGenerator();
 		locateFirstThirty();
 		columns.display();
+		
+		
 		col_holder = columns.getHead();
 		initialize_game();
 	}
 
 	public static void initialize_game() {
 		while (true) {
+			isTransfered = false;
+			
 			red();
 			eng.getTextWindow().setCursorPosition(x, 2);
 			System.out.print("C" + col_holder.getColumnName());
 			String input = keyList().toString();
-
+			
 			if (input.equalsIgnoreCase("B") && selected_box_element == 0 && from_num_node == null) {
 				selected_box_element = (int) box.representBoxElement();
 
@@ -65,12 +73,14 @@ public class ColumnsGame {
 							&& !(columns.sizeColumns(col_holder.getColumnName().toString()) + counter > 22)) {
 
 						while (from_num_node != null) {
+							isTransfered = true;
 							columns.addNumber(col_holder.getColumnName().toString(), (int) from_num_node.getNumber());
-							from_num_node = from_num_node.getNext();
+							from_num_node = from_num_node.getNext();						
 						}
-
+						
 					} else {
 						while (from_num_node != null) {
+							
 							columns.addNumber(from_col_node.getColumnName().toString(),
 									(int) from_num_node.getNumber());
 							from_num_node = from_num_node.getNext();
@@ -165,7 +175,11 @@ public class ColumnsGame {
 				}
 
 			}
-
+			yellow();
+			eng.getTextWindow().setCursorPosition(30, 4);
+			if(isTransfered)
+				transferCount++;
+			System.out.println("Transfer Count: " + transferCount);
 			reset_keyList();
 
 		}

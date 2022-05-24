@@ -1,15 +1,22 @@
 package Lists.Nodes;
 
+
 public class DoubleNode {
 		Object data;
-		DoubleNode prev;
-		DoubleNode next;
+		private DoubleNode prev;
+		private DoubleNode next;
 
 		public DoubleNode(Object data) {
 			this.data = data;
 			prev = null;
 			next = null;
 		}
+		
+		
+
+		
+
+
 
 		public Object getData() {
 			return data;

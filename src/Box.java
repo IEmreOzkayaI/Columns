@@ -24,10 +24,12 @@ public class Box {
 				content = 1;
 		}
 
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 400; i++) {
 			shuffle();
 		}
 	}
+	
+	
 
 	public void shuffle() {
 
@@ -80,8 +82,7 @@ public class Box {
 			System.out.print(num.toString());
 
 		}
-		singleLinkedList.pop_front();
-
+		singleLinkedList.remove(num);
 		return (int)num;
 	}
 	

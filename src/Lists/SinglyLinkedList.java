@@ -5,28 +5,14 @@ import Lists.Nodes.SingleNode;
 public class SinglyLinkedList {
 	private SingleNode head;
 
-	
-
-	static SingleNode removeFirstNode(SingleNode head)
-    {
-        if (head == null)
-            return null;
- 
-        // Move the head pointer to the next node
-        SingleNode temp = head;
-        head = head.getLink();
- 
-        return head;
-    }
-	
 	public SingleNode setHead(Object data, SingleNode link) {
-		
+
 		SingleNode head = new SingleNode(data);
 		head.setLink(head);
 		return head;
-		
+
 	}
-	
+
 	public SingleNode setNode(Object data, SingleNode link) {
 		SingleNode node = new SingleNode(data);
 		node.setLink(link);
@@ -36,21 +22,21 @@ public class SinglyLinkedList {
 	public SingleNode getHead() {
 		return head;
 	}
-	
+
 	public void pop_front() {
-		  if(this.head != null) {
-		    
-		    //1. if head is not null, create a
-		    //   temp node pointing to head
-			  SingleNode temp = this.head;
-		    
-		    //2. move head to next of head
-		    this.head = this.head.getLink();
-		    
-		    //3. delete temp node
-		    temp = null;  
-		  }
+		if (this.head != null) {
+
+			// 1. if head is not null, create a
+			// temp node pointing to head
+			SingleNode temp = this.head;
+
+			// 2. move head to next of head
+			this.head = this.head.getLink();
+
+			// 3. delete temp node
+			temp = null;
 		}
+	}
 
 	public void Add(Object data) {
 		if (head == null) {
