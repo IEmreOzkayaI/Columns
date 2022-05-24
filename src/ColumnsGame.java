@@ -83,7 +83,13 @@ public class ColumnsGame {
 					white();
 					columns.display();
 				}
-
+				else if(col_holder.getDown() == null) {
+					while (from_num_node != null) {
+						columns.addNumber(from_col_node.getColumnName().toString(),
+								(int) from_num_node.getNumber());
+						from_num_node = from_num_node.getNext();
+					}
+				}
 				else if (selected_box_element != 0 && columns.sizeColumns(col_holder.getColumnName().toString()) < 21) {
 					if ((Math.abs((int) selected_box_element - (int) col_holder.getLastNode()) == 1
 							|| (int) selected_box_element - col_holder.getLastNode() == 0)) {
