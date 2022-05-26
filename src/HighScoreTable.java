@@ -58,7 +58,7 @@ public class HighScoreTable {
             }
         }
                     
-        sortedList.deleteLast();
+      //  sortedList.deleteLast();
                  
         this.data = sortedList;
     }
@@ -80,11 +80,25 @@ public class HighScoreTable {
         }
     }
 
-    public void addPlayerScore(double score) {
-        HighScoreData scoreData = new HighScoreData("You", score);
+    public void addPlayerScore(String playerName, double score) {
+        HighScoreData scoreData = new HighScoreData(playerName, score);
         DoubleNode playerScore = new DoubleNode(scoreData);
         data.insertLast(playerScore);
         sortHighScoreTable();
+    }
+    
+    public void writeSortedHighScoreTableToFile() {
+        try {
+            FileWriter writer = new FileWriter("highScoreTable.txt");
+            for (int i = 0; i < data.size(); i++) {
+                HighScoreData scoreData = (HighScoreData) data.getIndex(i).getData();
+                writer.write(scoreData.getName() + "-" + scoreData.getScore() + "\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

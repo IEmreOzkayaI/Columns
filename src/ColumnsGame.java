@@ -4,6 +4,7 @@ import enigma.console.TextAttributes;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Scanner;
 
 import Lists.MultiLevelLinkedList;
 import Lists.Nodes.ColumnNode;
@@ -22,36 +23,46 @@ public class ColumnsGame {
 	static int num_x = 6;
 	static int num_y = 4;
 	static boolean columnSelected = false;
-
+	static SingleNode box_control = null;
 	static int selected_box_element = 0;
 	static boolean num_selected = false;
 	static NumNode num_holder = null;
 	static ColumnNode col_holder = null;
 	static NumNode from_num_node = null;
 	static ColumnNode from_col_node = null;
-	static int transferCount = 0;
-	static int score;
+	static int transferCount = 1;
+	static int OrderedSetCount =0;	
+	static int score=0;
 	static int finishedSets;
+	
+	static double End_Game_Score=0;
+	static String playerName = "";
 //	static int endGameScore = 100 * finishedSets + (score / transferCount);
 	static boolean isTransfered = false;
 
 	public ColumnsGame(Console eng) throws InterruptedException {
 		ColumnsGame.eng = eng;
+		System.out.print("Enter your name: ");
+		Scanner scan = new Scanner(System.in);
+		playerName = scan.nextLine();
+		eng.getTextWindow().setCursorPosition(0, 0);
+		System.out.println("          Player : " + playerName + "      ");
 		box = new Box(eng);
 		box.numberGenerator();
 		locateFirstThirty();
 		columns.display();
-
+		box_control = box.getSLL().getHead();
 		col_holder = columns.getHead();
+		
+		
 		initialize_game();
 	}
 
 	public static void initialize_game() {
-		while (true) {
+		while (true) {	
 			white();
-
 			eng.getTextWindow().setCursorPosition(30, 4);
-			System.out.println("Transfer Count: " + transferCount);
+			System.out.println("Transfer Count: " + (transferCount -  1));
 			eng.getTextWindow().setCursorPosition(30, 6);
 			System.out.println("Score: " + score);
 			isTransfered = false;
@@ -60,10 +71,14 @@ public class ColumnsGame {
 			eng.getTextWindow().setCursorPosition(x, 2);
 			System.out.print("C" + col_holder.getColumnName());
 			String input = keyList().toString();
-
-			if (input.equalsIgnoreCase("B") && selected_box_element == 0 && from_num_node == null) {
+			if(transferCount==1) {
+				End_Game_Score = score + (score/transferCount);
+			}else {
+				End_Game_Score = score/10 + (score/(transferCount-1));
+			}
+			if (input.equalsIgnoreCase("B") && selected_box_element == 0 && from_num_node == null && box_control !=null) {
 				selected_box_element = (int) box.representBoxElement();
-
+				box_control = box_control.getLink();
 			} else if (input.equalsIgnoreCase("X")) {
 				// null column part
 				if (col_holder.getDown() == null) {
@@ -109,7 +124,7 @@ public class ColumnsGame {
 						temp = temp.getNext();
 						counter++;
 					}
-					// trnasfered
+					// trasferred
 					if ((Math.abs((int) from_num_node.getNumber() - (int) col_holder.getLastNode()) == 1
 							|| (int) from_num_node.getNumber() - col_holder.getLastNode() == 0)
 							&& !(columns.sizeColumns(col_holder.getColumnName().toString()) + counter > 22)) {
@@ -129,7 +144,7 @@ public class ColumnsGame {
 						isTransfered = true;
 
 					} 
-					// dont transferred
+					// not transferred
 					else {
 						while (from_num_node != null) {
 
@@ -148,16 +163,14 @@ public class ColumnsGame {
 				
 				// box transfer
 				else if (selected_box_element != 0 && columns.sizeColumns(col_holder.getColumnName().toString()) < 21) {
-					// succes
+					// success
 					if ((Math.abs((int) selected_box_element - (int) col_holder.getLastNode()) == 1
 							|| (int) selected_box_element - col_holder.getLastNode() == 0)) {
 						columns.addNumber(col_holder.getColumnName().toString(), selected_box_element);
 						reset_the_game_coordinate();
 						if(columns.sizeColumns(col_holder.getColumnName().toString()) == 11) {
 							score += find_sequential(col_holder);
-						}
-						if(columns.sizeColumns(from_col_node.getColumnName().toString()) == 11) {
-							score += find_sequential(from_col_node);
+							
 						}
 						col_holder = columns.getHead();
 						box.hideBoxElement();
@@ -214,7 +227,7 @@ public class ColumnsGame {
 
 			}
 
-			else if (input.equalsIgnoreCase("Ex")) {
+			else if (input.equalsIgnoreCase("Esc")) {
 
 				reset_the_game_coordinate();
 				col_holder = columns.getHead();
@@ -235,16 +248,57 @@ public class ColumnsGame {
 				}
 
 			}
+			else if (input.equalsIgnoreCase("Exit")) {
+				Clear();
+				white();
+				highScoreTable.addPlayerScore(playerName, End_Game_Score);
+				eng.getTextWindow().setCursorPosition(3, 3);
+				highScoreTable.printScores();
+				highScoreTable.writeSortedHighScoreTableToFile();
+				
+				break;
+			}
 
 			reset_keyList();
+			
+			if(OrderedSetCount == 5) {
+				Clear();
+				highScoreTable.addPlayerScore(playerName, End_Game_Score);
+				eng.getTextWindow().setCursorPosition(3, 3);
+				highScoreTable.printScores();	
+				highScoreTable.writeSortedHighScoreTableToFile();
+				break;
+			}
 
 		}
+				eng.getTextWindow().setCursorPosition(25, 6);
+		System.out.print("End Game Score: "+ End_Game_Score);
 	}
 
 	public static void clearConsole() {
 		eng.getTextWindow().setCursorPosition(0, 2);
 		for (int i = 0; i < 22; i++) {
 			for (int j = 0; j < 29; j++) {
+				eng.getTextWindow().setCursorPosition(0 + j, 2 + i);
+
+				System.out.print(" ");
+			}
+			System.out.println(" ");
+		}
+
+	}
+	
+	public static void Clear() {
+		for (int j = 0; j < 40; j++) {
+			
+
+			System.out.println(" ");
+		}
+	}
+	public static void clearEndConsole() {
+		eng.getTextWindow().setCursorPosition(0, 2);
+		for (int i = 0; i < 100; i++) {
+			for (int j = 0; j < 100; j++) {
 				eng.getTextWindow().setCursorPosition(0 + j, 2 + i);
 
 				System.out.print(" ");
@@ -318,7 +372,9 @@ public class ColumnsGame {
 				if (rkey == KeyEvent.VK_ENTER)
 					return "E";
 				if (rkey == KeyEvent.VK_ESCAPE)
-					return "Ex";
+					return "Esc";
+				if (rkey == KeyEvent.VK_E)
+					return "Exit";
 				else
 					return "N";
 
@@ -354,6 +410,7 @@ public class ColumnsGame {
 					value = ten_to_one(current_column, current_num, i);
 				if (value == 1000) {
 					columns.remove_transfer_element(current_column, current_num);
+					OrderedSetCount++;
 					clearConsole();
 					break;
 				}
@@ -362,6 +419,7 @@ public class ColumnsGame {
 		
 
 		}
+		
 
 		return value;
 	}
