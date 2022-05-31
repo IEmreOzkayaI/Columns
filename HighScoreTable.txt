@@ -1,11 +1,16 @@
 ali-600.0
 Emre Kaya-592.34
 emre-560.0
+emre-560.0
 Tarik Deniz-512.65
 Ahmet Kaya-435.7
+emre-433.0
 Seda Rüzgar-378.24
 Yigit Demir-341.32
 arla-333.0
 Sema Fýrat-224.23
 Ali Vadi-136.32
 Sami Keleþ-223.87
+Alperen-0.0
+Emre Özkaya-0.0
+Emre Özkaya-0.0

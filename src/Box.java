@@ -24,10 +24,10 @@ public class Box {
 			if (content % 10 == 1)
 				content = 1;
 		}
-/*
+
 		for (int i = 0; i < 1000; i++) {
 			shuffle();
-		}*/
+		}
 	}
 
 	public void shuffle() {
@@ -59,18 +59,18 @@ public class Box {
 	}
 
 	public void locateBox() {
-		eng.getTextWindow().setCursorPosition(30, 11);
+		eng.getTextWindow().setCursorPosition(30, 7);
 		System.out.print("+--+");
-		eng.getTextWindow().setCursorPosition(30, 12);
+		eng.getTextWindow().setCursorPosition(30, 8);
 		System.out.print("|  |");
-		eng.getTextWindow().setCursorPosition(30, 13);
+		eng.getTextWindow().setCursorPosition(30, 9);
 		System.out.print("+--+");
 		eng.getTextWindow().setCursorPosition(0,0);
 
 	}
 
 	public int representBoxElement() {
-		eng.getTextWindow().setCursorPosition(31, 12);
+		eng.getTextWindow().setCursorPosition(31, 8);
 		Object num = singleLinkedList.getHead().getData();
 		if ((int) num < 10)
 			System.out.print(num.toString()+" ");
@@ -84,7 +84,7 @@ public class Box {
 	}
 	
 	public void hideBoxElement() {
-		eng.getTextWindow().setCursorPosition(31, 12);
+		eng.getTextWindow().setCursorPosition(31, 8);
 		System.out.print("  ");
 	}
 
